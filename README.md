@@ -80,7 +80,7 @@ uv run python scripts/scaffold-skill.py \
   --output "../skills/"
 ```
 
-The new skill is validated against the [agentskills.io](https://agentskills.io) spec automatically.
+The scaffold script enforces name and description format constraints from the [agentskills.io](https://agentskills.io) spec. For full spec compliance, run the checklist in `references/validation-checklist.md`.
 
 ## Who This Is For
 
@@ -111,6 +111,9 @@ experience-capture/
 | `npx skills` | Yes | For SkillsMP installation |
 | `uv` | For Step 7 | Python project manager for `scaffold-skill.py` |
 | `codemem` | For Steps 3-4 | Built into OpenCode/Claude Code |
+| SOP files | For Step 4 | QUICK-START.md, FULL-SOP.md, PITFALLS.md per service under `.agents/[service]/` |
+
+> **Note:** Step 4 (SOP update) requires that your project already maintains SOP document structure under `.agents/[service]/`. If you don't have this structure, Steps 1-3, 5-7 still work independently.
 
 ## Validating the Skill
 

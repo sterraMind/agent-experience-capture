@@ -175,7 +175,7 @@ If any criterion fails → **do not create a skill**. Just keep the codemem entr
 ### 7b. Scaffold the Skill
 
 ```bash
-uv run python scripts/scaffold-skill.py --name "process-name" --category "category" --output "../skills/"
+uv run python scripts/scaffold-skill.py --name "process-name" --description "Runs [task] using [tools]. Use when [trigger]. Don't use for [boundary]." --category "category" --output "../skills/"
 ```
 
 This creates:
