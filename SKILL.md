@@ -1,3 +1,13 @@
+---
+name: experience-capture
+description: "Captures session knowledge into codemem entries, SOP documents, and handoff records. Use when a session completes with lessons worth preserving across sessions — especially bugs found, API discoveries, design decisions, or patterns worth codifying. Also creates new agent skills when a captured experience proves to be a repeatable, cross-session process (Step 7). Don't use for trivial one-offs, routine operations following existing SOPs, temporary context expiring with the session, or on-the-fly skill generation without real usage history."
+license: Apache-2.0
+metadata:
+  author: kpy-team
+  version: "2.0"
+  last_updated: "2026-07-07"
+---
+
 # Experience Capture Skill
 
 ## Purpose
@@ -145,6 +155,83 @@ Append to `.agents/handoff.md`:
 - learned: [one-line summary of what was learned]
 - codemem: [IDs of entries created, comma-separated]
 - updated: [file paths modified]
+```
+
+## Step 7: Create New Skill (Conditional)
+
+Only if a captured experience represents a **repeatable process** worth packaging as a standalone skill.
+
+### 7a. Assess Skill-Worthiness (ALL must pass)
+
+| Criterion | Threshold |
+|-----------|----------|
+| Proven reuse | Used 3+ times across sessions |
+| Clear contract | Defined inputs, outputs, and error conditions |
+| Decision logic | Contains branching/conditional reasoning, not just rules |
+| Cross-session value | Would benefit agents without access to this session |
+
+If any criterion fails → **do not create a skill**. Just keep the codemem entry.
+
+### 7b. Scaffold the Skill
+
+```bash
+uv run python scripts/scaffold-skill.py --name "process-name" --category "category" --output "../skills/"
+```
+
+This creates:
+```
+process-name/
+├── SKILL.md              # Skeleton with frontmatter + section placeholders
+├── scripts/              # Empty dir for executable helpers
+├── references/           # Empty dir for supplementary docs
+└── assets/               # Empty dir for templates/static files
+```
+
+### 7c. Fill SKILL.md from Captured Experience
+
+Use the captured codemem entry as source material. Map to skill structure:
+
+| Source | → Skill Section |
+|--------|----------------|
+| TRIGGER field | `description` in frontmatter (pushy, with negatives) |
+| RULE field | Step-by-step procedures in body |
+| WHY field | Overview paragraph |
+| VIOLATION field | Examples (wrong/right patterns) |
+| TAGS field | Quick Reference table scenarios |
+
+Follow the template in `references/skill-templates.md`. Target:
+- SKILL.md ≤ **500 lines** (move details to `references/` if over)
+- Description ≤ **1024 chars** with capability + triggers + negatives
+- Name ≤ **64 chars**, lowercase+hyphens, matches directory exactly
+
+### 7d. Validate Against agentskills.io Spec
+
+Run the validation checklist in `references/validation-checklist.md`. Key checks:
+- [ ] `name` matches directory, ≤ 64 chars, lowercase+hyphens only
+- [ ] `description` ≤ 1024 chars, includes capability + triggers + negatives
+- [ ] No README.md, CHANGELOG.md, or other docs in skill root
+- [ ] All file references are relative, one level deep
+- [ ] SKILL.md ≤ 500 lines
+
+### 7e. Test Triggering Accuracy
+
+Use the skill-creator eval pattern:
+1. Write 3-5 test prompts (substantive, multi-step — not simple one-liners)
+2. Run each prompt through the agent
+3. Verify the skill triggers on relevant prompts and **does not** trigger on irrelevant ones
+4. Adjust description if undertriggering or overtriggering occurs
+
+### 7f. Register the Skill
+
+After validation passes:
+1. Copy the skill directory to the target skills repository (e.g., `~/.config/opencode/skills/`)
+2. Update `opencode.json` or equivalent config to register the skill
+3. Append to `.agents/handoff.md`:
+```markdown
+## YYYY-MM-DD
+- created-skill: [skill-name] from codemem entry [ID]
+- registered: [config file updated]
+- eval-passed: [yes/no]
 ```
 
 ## Quality Gate (Must Pass All)

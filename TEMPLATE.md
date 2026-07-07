@@ -41,3 +41,26 @@ codemem_memory_remember(
 - codemem: [IDs created]
 - updated: [file paths]
 ```
+
+## New Skill Entry (Step 7)
+
+When a captured experience qualifies as a repeatable process worth packaging as a skill:
+
+```bash
+# 1. Scaffold
+uv run python scripts/scaffold-skill.py --name "process-name" \
+  --description "Description with capability + triggers + negatives" \
+  --category "technical" \
+  --output "../skills/"
+
+# 2. Fill SKILL.md from codemem entry fields
+#    TRIGGER → description, RULE → procedures, VIOLATION → examples
+
+# 3. Validate
+#    Run references/validation-checklist.md
+
+# 4. Register
+#    Copy to skills/ dir, update opencode.json, append handoff record
+```
+
+See `references/skill-templates.md` for full SKILL.md templates.
